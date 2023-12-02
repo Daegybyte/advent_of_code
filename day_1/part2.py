@@ -43,21 +43,3 @@ if __name__ == "__main__":
             nums.append(int(n))
     print(nums)
     
-    # print(sum(nums))
-    
-    nums_modded = []
-    for num in nums:
-        if 0 < num < 10:
-            num = num * 11
-            nums_modded.append(num)
-            continue
-        elif 10 <= num < 100:
-            nums_modded.append(num)
-            continue
-        else:
-            num_str = str(num)
-            new_num = int(num_str[0] + num_str[-1])
-            nums_modded.append(new_num)
-
-    print(nums_modded)
-    print(sum(nums_modded))
