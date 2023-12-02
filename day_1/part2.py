@@ -1,51 +1,50 @@
-import re
-import os
+LETTERS_TO_DIGITS = {
+    "one": 1,
+    "two": 2,
+    "three": 3,
+    "four": 4,
+    "five": 5,
+    "six": 6,
+    "seven": 7,
+    "eight": 8,
+    "nine": 9,
+}
 
 
-def extract_digits(line):
-    # Extract digits (both actual digits and spelled-out digits) from the line
-    digits = re.findall(r'\d+|[a-z]+', line.lower())
-    
-    # Convert spelled-out digits to actual digits
-    digit_mapping = {'one': '1', 'two': '2', 'three': '3', 'four': '4', 'five': '5', 'six': '6', 'seven': '7', 'eight': '8', 'nine': '9'}
-    
-    for i in range(len(digits)):
-        if digits[i] in digit_mapping:
-            digits[i] = digit_mapping[digits[i]]
-    
-    print(digits)
-    
-    # Extract the first and last digits
-    first_digit = str(digits[0])
-    last_digit = str(digits[-1])
-    
-    return first_digit, last_digit
+def get_calibration_sum(lines: list[str]) -> int:
+    calibration_sum = 0
 
-# Rest of your code...
+    for line in lines:
+        first_number, last_number = None, None
+
+        for i, char in enumerate(line):
+            if char.isdigit():
+                if first_number is None:
+                    first_number = int(char)
+                last_number = int(char)
+            else:
+                for length in range(5, 2, -1):
+                    if i < len(line) - length + 1 and line[i:i + length] in LETTERS_TO_DIGITS:
+                        if first_number is None:
+                            first_number = LETTERS_TO_DIGITS[line[i:i + length]]
+                        last_number = LETTERS_TO_DIGITS[line[i:i + length]]
+                        break
+
+        calibration_sum += int(f"{first_number}{last_number}") if first_number is not None and last_number is not None else 0
+
+    return calibration_sum
 
 
-
-def calculate_calibration_sum(calibration_document):
-    # Split the document into lines and concatenate the first and last digits
-    concatenated_digits = ""
-    
-    for line in calibration_document:
-        if line:
-            first_digit, last_digit = extract_digits(line)
-            concatenated_digits += first_digit + last_digit
-    
-    return concatenated_digits
-
-if __name__ == "__main__":    
-    # Get the directory of the current script
+def main() -> None:
+    import os
     script_directory = os.path.dirname(os.path.realpath(__file__))
 
-    # Combine the script directory with the file name
     file_path = os.path.join(script_directory, "input.txt")
     
-    with open(file_path) as f:
-        lines = [line.strip() for line in f]
-    
-    result = calculate_calibration_sum(lines)
-    print(result)
-    
+    with open(file_path, "r") as f:
+        result = get_calibration_sum(f.readlines())
+        print(result)
+
+
+if __name__ == "__main__":
+    main()
