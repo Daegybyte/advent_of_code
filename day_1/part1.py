@@ -1,24 +1,19 @@
 import os
 if __name__ == "__main__":    
     
-    # Get the directory of the current script
     script_directory = os.path.dirname(os.path.realpath(__file__))
 
-    # Combine the script directory with the file name
     file_path = os.path.join(script_directory, "input.txt")
     
     with open(file_path) as f:
         lines = [line.strip() for line in f]
-    # print(lines)    
     nums = []
     for line in lines:
         n = ''.join(filter(str.isdigit, line))
         if n:
             nums.append(int(n))
     print(nums)
-    
-    # print(sum(nums))
-    
+        
     nums_modded = []
     for num in nums:
         if 0 < num < 10:
